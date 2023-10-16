@@ -26,7 +26,12 @@ namespace ReStore.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductById(int id)
         {
-            return Ok(await _context.Products.FirstOrDefaultAsync(x=>x.Id ==id));
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+            if(product == null)
+            {
+                return NotFound("Product not found!");
+            }
+            return Ok(product );
         }
     }
 }
