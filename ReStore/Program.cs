@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using ReStore.Data;
+using ReStore.Mappings;
 using ReStore.Middleware;
+using ReStore.Repository;
+using ReStore.Repository.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,14 @@ builder.Services.AddControllers();
 builder.Services.AddTransient<ExceptionMiddleware>();
 #endregion
 
+#region Repositories
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+#endregion
+
+#region AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+#endregion
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -44,7 +55,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(opt =>
 {
-    opt.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
 });
 
 
