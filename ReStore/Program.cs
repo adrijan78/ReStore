@@ -32,6 +32,7 @@ builder.Services.AddTransient<ExceptionMiddleware>();
 
 #region Repositories
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 #endregion
 
 #region AutoMapper
