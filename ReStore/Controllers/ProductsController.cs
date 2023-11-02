@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReStore.Data;
@@ -14,16 +15,20 @@ namespace ReStore.Controllers
     {
         private readonly RestoreDbContext _context;
         private readonly IProductRepository _productRepository;
+        private readonly UserManager<User> _userManager;
 
-        public ProductsController(RestoreDbContext context, IProductRepository productRepository)
+        public ProductsController(RestoreDbContext context, IProductRepository productRepository, UserManager<User> userManager)
         {
             _context = context;
             _productRepository = productRepository;
+            _userManager = userManager;
         }
 
         [HttpGet]
         public async Task<ActionResult<ProductsWithPagination>> GetAll(string orderBy, string searchTerm, string filterByBrand, string filterByType, int pageNumber = 1, int pageSize=6)
         {
+          
+
             return Ok(await _productRepository.GetAllProducts(orderBy, searchTerm, filterByBrand, filterByType, pageNumber, pageSize));
         }
 
