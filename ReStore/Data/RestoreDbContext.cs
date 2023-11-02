@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ReStore.Entities;
 using System.Collections.Generic;
 
 namespace ReStore.Data
 {
-    public class RestoreDbContext: DbContext
+    public class RestoreDbContext: IdentityDbContext<User>
     {
         public RestoreDbContext(DbContextOptions options) : base(options)
         {
@@ -18,6 +20,11 @@ namespace ReStore.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<IdentityRole>().HasData(
+                    new IdentityRole { Name="Member",NormalizedName="MEMBER"},
+                    new IdentityRole { Name="Admin",NormalizedName="ADMIN"}
+                );
 
             var seedDataProducts = new List<Product> {
                         new Product
@@ -220,11 +227,13 @@ namespace ReStore.Data
 
             foreach (var product in seedDataProducts)
             {
-                product.Id=new Random().Next(1,10000000);
+                product.Id = new Random().Next(1, 10000000);
             }
 
 
             modelBuilder.Entity<Product>().HasData(seedDataProducts);
+
+
 
         }
     }
