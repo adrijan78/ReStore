@@ -23,7 +23,13 @@ namespace ReStore.Controllers
         {
             try
             {
-                var basketDto = await _basketRepository.GetBasket(Request.Cookies["buyerId"]);
+                var buyerId = User.Identity.Name ?? Request.Cookies["buyerId"];
+                if (string.IsNullOrEmpty(buyerId))
+                {
+                    Response.Cookies.Delete("buyerId");
+                    return BadRequest("Something went wrong");
+                }
+                var basketDto = await _basketRepository.GetBasket(buyerId);
                 return Ok(basketDto);
             }
             catch (Exception ex)
@@ -75,9 +81,14 @@ namespace ReStore.Controllers
 
         private string GenerateBuyerId()
         {
-            var buyerId = Guid.NewGuid().ToString();
-            var cookieOpt = new CookieOptions { IsEssential = true, Expires = DateTime.Now.AddDays(30) };
-            Response.Cookies.Append("buyerId", buyerId, cookieOpt);
+            var buyerId = User.Identity?.Name;
+            if (string.IsNullOrEmpty(buyerId))
+            {
+                buyerId = Guid.NewGuid().ToString();
+                var cookieOpt = new CookieOptions { IsEssential = true, Expires = DateTime.Now.AddDays(30) };
+                Response.Cookies.Append("buyerId", buyerId, cookieOpt);
+            }
+                       
             return buyerId;
         }
     }

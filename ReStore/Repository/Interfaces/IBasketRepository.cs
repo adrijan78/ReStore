@@ -12,5 +12,9 @@ namespace ReStore.Repository.Interfaces
 
         Task<BasketDto> GetBasket(string buyerId);
 
+        void RemoveBasket(int basketId);
+
+        Task Update(BasketDto basketDto);
+
     }
 }

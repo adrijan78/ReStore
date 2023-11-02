@@ -62,23 +62,32 @@ namespace ReStore.Repository
 
         public async Task<BasketDto> GetBasket(string buyerId)
         {
+
             var basketDto =  await _context.Baskets
                 .Where(x => x.BuyerId == buyerId)
                 .ProjectTo<BasketDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
             if(basketDto is null)
             {
-                throw new NotFoundException("There is no shopping basket for this user");
-            }
-             
-            if (basketDto is null && String.IsNullOrEmpty(buyerId))
-            {
-                return null;
+               return null;
             }
 
 
             return basketDto;
            
+        }
+
+        public  void RemoveBasket(int basketId)
+        {
+            var basket = _context.Baskets.FirstOrDefault(x => x.Id == basketId);
+            if(basket == null)
+            {
+                throw new NotFoundException("Basket not found");
+            }  
+
+             _context.Baskets.Remove(basket);
+            _context.SaveChanges();
+
         }
 
         public async Task RemoveItem(string buyerId, int productId, int quantity)
@@ -111,8 +120,15 @@ namespace ReStore.Repository
 
         }
 
-
-
+        //Made this function only for Account Controller!!!1
+        public async Task Update(BasketDto basketDto)
+        {
+            var basket = await _context.Baskets.FirstOrDefaultAsync(x=>x.Id == basketDto.Id);
+             basket.BuyerId = basketDto.BuyerId;
+            _context.Baskets.Update(basket);
+            await _context.SaveChangesAsync();
+ 
+        }
 
         private async Task<Basket> CreateBasket(string buyerId)
         {
