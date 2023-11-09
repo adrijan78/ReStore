@@ -64,6 +64,7 @@ builder.Services.AddCors();
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<ITokenService, TokenService>();  
+builder.Services.AddScoped<IPaymentService,PaymentService>();
 
 #region Middlewares
 builder.Services.AddTransient<ExceptionMiddleware>();
@@ -72,6 +73,7 @@ builder.Services.AddTransient<ExceptionMiddleware>();
 #region Repositories
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 #endregion
 
 #region AutoMapper
@@ -83,7 +85,7 @@ builder.Services.AddIdentityCore<User>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
 })
-    .AddRoles<IdentityRole>()
+    .AddRoles<Role>()
     .AddEntityFrameworkStores<RestoreDbContext>();
 #endregion
 

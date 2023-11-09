@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ReStore.DTOs;
 using ReStore.Entities;
+using ReStore.Entities.OrderAggregate;
 
 namespace ReStore.Mappings
 {
@@ -16,6 +17,18 @@ namespace ReStore.Mappings
                 .ForMember(dest => dest.PictureUrl, opt => opt.MapFrom(src => src.Product.PictureUrl))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Product.Price))
                 .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Product.Id)).ReverseMap();
+            CreateMap<OrderDto, Order>();
+            CreateMap<Order, ReturnedOrderDto>()
+                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.GetTotal()))
+                .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.OrderStatus.ToString()));
+            CreateMap<OrderItems, OrderItemDto>()
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ItemOrdered.ProductId))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ItemOrdered.Name))
+                .ForMember(dest => dest.PictureUrl, opt => opt.MapFrom(src => src.ItemOrdered.PictureUrl));
+                
+                
+
+               
         }
     }
 }

@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ReStore.Entities;
+using ReStore.Entities.OrderAggregate;
 using System.Collections.Generic;
 
 namespace ReStore.Data
 {
-    public class RestoreDbContext: IdentityDbContext<User>
+    public class RestoreDbContext: IdentityDbContext<User,Role,int>
     {
         public RestoreDbContext(DbContextOptions options) : base(options)
         {
@@ -14,16 +15,22 @@ namespace ReStore.Data
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Basket> Baskets { get; set; }
-        public DbSet<BasketItem> BasketItems { get; set; }
-        
+        public DbSet<Order> Orders { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<IdentityRole>().HasData(
-                    new IdentityRole { Name="Member",NormalizedName="MEMBER"},
-                    new IdentityRole { Name="Admin",NormalizedName="ADMIN"}
+            modelBuilder.Entity<User>()
+                .HasOne(a => a.Address)
+                .WithOne()
+                .HasForeignKey<UserAddress>(a => a.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Role>().HasData(
+                    new Role { Id=1,Name="Member",NormalizedName="MEMBER"},
+                    new Role { Id=2,Name="Admin",NormalizedName="ADMIN"}
                 );
 
             var seedDataProducts = new List<Product> {

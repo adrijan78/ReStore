@@ -65,7 +65,7 @@ namespace ReStore.Controllers
         {
             try
             {
-                var buyerId = Request.Cookies["buyerId"];
+                var buyerId = Request.Cookies["buyerId"] ?? GenerateBuyerId();
                 await _basketRepository.RemoveItem(buyerId, productId, quantity);
                 return Ok("Item removed successfully!");
             }
@@ -78,7 +78,7 @@ namespace ReStore.Controllers
 
 
 
-
+         
         private string GenerateBuyerId()
         {
             var buyerId = User.Identity?.Name;
