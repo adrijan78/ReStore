@@ -2,12 +2,12 @@
 {
     public class Address
     {
-        public int FullName { get; set; }
-        public int Address1 { get; set; }
-        public int Address2 { get; set; }
-        public int City { get; set; }
-        public int State { get; set; }
-        public int Zip { get; set; }
-        public int Country { get; set; }
+        public string FullName { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public string Country { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReStore.DTOs;
 using ReStore.Entities;
 using ReStore.Repository.Interfaces;
@@ -59,6 +60,17 @@ namespace ReStore.Controllers
             return Ok(userToken);
         }
 
+        [Authorize]
+        [HttpGet("savedAddress")]
+        public async Task<ActionResult<UserAddress>> GetSavedAddress()
+        {
+            return await _userManager.Users.Where(x => x.UserName == User.Identity.Name)
+                .Select(user => user.Address)
+                .FirstOrDefaultAsync();
+        }
+
+
+
 
         [HttpPost("register")]
         public async Task <IActionResult> Register (RegisterDto registerDto)
@@ -87,7 +99,11 @@ namespace ReStore.Controllers
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            return new UserTokenDto { Email = user.Email,Token=await _tokenService.GenerateToken(user) };
+            return new UserTokenDto { 
+                Email = user.Email,
+                Token=await _tokenService.GenerateToken(user),
+                Basket= await _basketRepository.GetBasket(user.UserName)
+            };
 
         }
 

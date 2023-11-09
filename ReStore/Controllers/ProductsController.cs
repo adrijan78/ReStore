@@ -25,9 +25,29 @@ namespace ReStore.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ProductsWithPagination>> GetAll(string orderBy, string searchTerm, string filterByBrand, string filterByType, int pageNumber = 1, int pageSize=6)
+        public async Task<ActionResult<ProductsWithPagination>> GetAll(string orderBy,
+            string searchTerm, string filterByBrand,
+            string filterByType, int pageNumber = 1,
+            int pageSize=6)
         {
-          
+            //var user1 = new User
+            //{
+            //    UserName ="Bob",
+            //    Email="bob@hotmail.com"
+            //};
+
+            //await _userManager.CreateAsync(user1,"Pa$$w0rd");
+            //await _userManager.AddToRoleAsync(user1, "Member");
+
+            //var user2 = new User
+            //{
+            //    UserName = "Admin",
+            //    Email = "admin@hotmail.com"
+            //};
+
+            //await _userManager.CreateAsync(user2, "Pa$$w0rd");
+            //await _userManager.AddToRolesAsync(user2,new[] { "Member", "Admin" });
+
 
             return Ok(await _productRepository.GetAllProducts(orderBy, searchTerm, filterByBrand, filterByType, pageNumber, pageSize));
         }

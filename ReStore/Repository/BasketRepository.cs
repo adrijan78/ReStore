@@ -125,6 +125,8 @@ namespace ReStore.Repository
         {
             var basket = await _context.Baskets.FirstOrDefaultAsync(x=>x.Id == basketDto.Id);
              basket.BuyerId = basketDto.BuyerId;
+             basket.PaymentIntentId = basketDto.PaymentIntentId;
+             basket.ClientSecret = basketDto.ClientSecret;
             _context.Baskets.Update(basket);
             await _context.SaveChangesAsync();
  
